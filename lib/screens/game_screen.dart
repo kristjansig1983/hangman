@@ -1,5 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hangman/components/letterButton.dart';
+import 'package:hangman/utilities/alphabet.dart';
+
+Alphabet alphabetEng = Alphabet();
+
+Widget createButton(index) {
+  return Center(
+    child: LetterButton(
+      buttonTitle: alphabetEng.alphabet[index].toUpperCase(),
+      onPress: () {},
+    ),
+  );
+}
 
 class GameScreen extends StatelessWidget {
   const GameScreen({Key? key}) : super(key: key);
@@ -10,242 +23,121 @@ class GameScreen extends StatelessWidget {
         backgroundColor: Colors.black,
         title: Text('Hang Man'),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Row(
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('images/western-town-vector-scene.jpg'),
+            fit: BoxFit.fill,
+          ),
+        ),
+        alignment: Alignment.bottomCenter,
+        padding: EdgeInsets.fromLTRB(10.0, 2.0, 8.0, 10.0),
+        child: Table(
+          defaultVerticalAlignment: TableCellVerticalAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          children: [
+            TableRow(
               children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'A',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(0),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'B',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(1),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'C',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(2),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'D',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(3),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'E',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(4),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'F',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(5),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'G',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(6),
                 ),
               ],
             ),
-          ),
-          Expanded(
-
-            child: Row(
+            TableRow(
               children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'H',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(7),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'I',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(8),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'J',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(9),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'K',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(10),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'L',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(11),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'M',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(12),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'N',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(13),
                 ),
               ],
             ),
-          ),
-          Expanded(
-            child: Row(
+            TableRow(
               children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'O',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(14),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'P',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(15),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'Q',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(16),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'R',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(17),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'S',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(18),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'T',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(19),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'U',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(20),
                 ),
               ],
             ),
-          ),
-          Expanded(
-            child: Row(
+            TableRow(
               children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'V',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(21),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'W',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(22),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'X',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(23),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'Y',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(24),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'Z',
-                    ),
-                  ),
+                TableCell(
+                  child: createButton(25),
+                ),
+                TableCell(
+                  child: Text(''),
+                ),
+                TableCell(
+                  child: Text(''),
                 ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

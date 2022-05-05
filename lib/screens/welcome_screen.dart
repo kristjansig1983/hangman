@@ -12,6 +12,7 @@ class WelcomeScreen extends StatelessWidget {
         title: Text('Hang Man'),
       ),
       body: Center(
+
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
