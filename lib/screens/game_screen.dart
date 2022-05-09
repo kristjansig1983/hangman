@@ -29,13 +29,12 @@ class GameScreen extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('images/western-town-vector-scene.jpg'),
+            image: AssetImage('images/hangman_background.jpg'),
             fit: BoxFit.fill,
           ),
         ),
         alignment: Alignment.bottomCenter,
         child: Table(
-          defaultVerticalAlignment: TableCellVerticalAlignment.baseline,
           textBaseline: TextBaseline.alphabetic,
           children: [
             TableRow(

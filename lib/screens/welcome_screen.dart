@@ -11,15 +11,20 @@ class WelcomeScreen extends StatelessWidget {
         backgroundColor: Colors.black,
         title: Text('Hang Man'),
       ),
-      body: Center(
+      body: Container(
+        decoration: BoxDecoration(
+          color: Colors.blueGrey,
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Welcome To Hangman!',
+              'Welcome To Hangman! A life is on the line and it\'s your job to save it!',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 30.0,
                 fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
             ),
             SizedBox(),
@@ -39,12 +44,12 @@ class WelcomeScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 25.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: Colors.white,
                 ),
               ),
               style: ButtonStyle(
                 backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.purple),
+                    MaterialStateProperty.all<Color>(Color(0xFF319F48)),
               ),
             ),
           ],
