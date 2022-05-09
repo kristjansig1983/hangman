@@ -5,6 +5,9 @@ import 'package:hangman/utilities/alphabet.dart';
 
 Alphabet alphabetEng = Alphabet();
 
+class TableSpace{
+}
+
 Widget createButton(index) {
   return Center(
     child: LetterButton(
@@ -31,7 +34,6 @@ class GameScreen extends StatelessWidget {
           ),
         ),
         alignment: Alignment.bottomCenter,
-        padding: EdgeInsets.fromLTRB(10.0, 2.0, 8.0, 10.0),
         child: Table(
           defaultVerticalAlignment: TableCellVerticalAlignment.baseline,
           textBaseline: TextBaseline.alphabetic,

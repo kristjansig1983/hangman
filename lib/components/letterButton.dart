@@ -10,6 +10,12 @@ class LetterButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        primary: kLetterButtonColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
       onPressed: onPress,
         child: Text(
           buttonTitle,
