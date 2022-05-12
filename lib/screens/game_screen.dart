@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hangman/components/letterButton.dart';
 import 'package:hangman/utilities/alphabet.dart';
+import 'package:hangman/utilities/words.dart';
 
 Alphabet alphabetEng = Alphabet();
 
-class TableSpace{
-}
 
 Widget createButton(index) {
   return Center(
@@ -16,6 +15,7 @@ Widget createButton(index) {
     ),
   );
 }
+
 
 class GameScreen extends StatelessWidget {
   const GameScreen({Key? key}) : super(key: key);
