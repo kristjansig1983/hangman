@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'game_screen.dart';
+import 'package:hangman/utilities/words.dart';
+import 'game_screen.dart';
 
-class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({Key? key}) : super(key: key);
+class WelcomeScreen extends StatefulWidget {
+  final Words words = Words();
+
+  @override
+  _WelcomeScreenState createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +42,7 @@ class WelcomeScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) {
-                      return GameScreen();
+                      return GameScreen(hangmanObject: widget.words,);
                     },
                   ),
                 );
@@ -49,7 +57,7 @@ class WelcomeScreen extends StatelessWidget {
               ),
               style: ButtonStyle(
                 backgroundColor:
-                    MaterialStateProperty.all<Color>(Color(0xFF319F48)),
+                MaterialStateProperty.all<Color>(Color(0xFF319F48)),
               ),
             ),
           ],

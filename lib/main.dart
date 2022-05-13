@@ -8,11 +8,7 @@ class hangMan extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: 'welcomeScreen',
-      routes: {
-        'welcomeScreen': (context) => WelcomeScreen(),
-        'gameScreen': (context) => GameScreen(),
-      },
+      home: WelcomeScreen(),
     );
   }
 }
