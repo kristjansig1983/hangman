@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
 import 'game_screen.dart';
-import 'package:hangman/utilities/words.dart';
 import 'game_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
-  final Words words = Words();
+
 
   @override
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Text('Hang Man'),
+        title: Text(
+          'Hang Man',
+          style: TextStyle(
+            fontFamily: 'Smokum',
+            fontSize: 40.0,
+          ),
+        ),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -30,7 +34,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               'Welcome To Hangman! A life is on the line and it\'s your job to save it!',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 30.0,
+                fontFamily: 'Smokum',
+                fontSize: 50.0,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
@@ -41,15 +46,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) {
-                      return GameScreen(hangmanObject: widget.words,);
-                    },
+                    builder: (context) => GameScreen(
+
+                    ),
                   ),
                 );
               },
               child: Text(
                 'Press To Start',
                 style: TextStyle(
+                  fontFamily: 'Smokum',
                   fontSize: 25.0,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -57,7 +63,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
               style: ButtonStyle(
                 backgroundColor:
-                MaterialStateProperty.all<Color>(Color(0xFF319F48)),
+                    MaterialStateProperty.all<Color>(Color(0xFF319F48)),
               ),
             ),
           ],
