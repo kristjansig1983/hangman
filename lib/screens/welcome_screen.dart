@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
 import 'game_screen.dart';
+import 'package:hangman/utilities/words.dart';
 import 'game_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
-
+  final Words words = Words();
 
   @override
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Text(
-          'Hang Man',
-          style: TextStyle(
-            fontFamily: 'Smokum',
-            fontSize: 40.0,
-          ),
-        ),
+        title: Text('Hang Man',
+        style: TextStyle(
+          fontFamily: 'Smokum',
+        ),),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -36,8 +35,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               style: TextStyle(
                 fontFamily: 'Smokum',
                 fontSize: 50.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
               ),
             ),
             SizedBox(),
@@ -46,9 +43,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => GameScreen(
-
-                    ),
+                    builder: (context) {
+                      return GameScreen(hangmanObject: widget.words,);
+                    },
                   ),
                 );
               },
@@ -57,13 +54,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 style: TextStyle(
                   fontFamily: 'Smokum',
                   fontSize: 25.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
                 ),
               ),
               style: ButtonStyle(
                 backgroundColor:
-                    MaterialStateProperty.all<Color>(Color(0xFF319F48)),
+                MaterialStateProperty.all<Color>(Color(0xFF319F48)),
               ),
             ),
           ],
