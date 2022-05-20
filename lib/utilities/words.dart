@@ -1,12 +1,13 @@
 import 'dart:math';
+import 'package:flutter/services.dart' show rootBundle;
 
 class Words {
   int counter = 0;
   List<int> _usedNums = [];
   List<String> _words = [];
 
-  void readWords() {
-    String fileText = 'documents/words.txt';
+  Future readWords() async {
+    String fileText = await rootBundle.loadString('documents/words.txt');
     _words = fileText.split('\n');
   }
 

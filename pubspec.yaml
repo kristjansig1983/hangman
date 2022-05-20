@@ -13,6 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
   rflutter_alert: ^2.0.4
+  material_design_icons_flutter: ^5.0.6595
 
 
 

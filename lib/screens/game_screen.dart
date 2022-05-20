@@ -5,6 +5,8 @@ import 'package:hangman/components/letterButton.dart';
 import 'package:hangman/screens/welcome_screen.dart';
 import 'package:hangman/utilities/alphabet.dart';
 import 'package:hangman/utilities/words.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 
 class GameScreen extends StatefulWidget {
@@ -22,7 +24,9 @@ class _GameScreenState extends State<GameScreen> {
   late String word;
   late String hiddenWord;
   List<String> wordList = [];
+  List<int> hintLetters = [];
   late List<bool> buttonStatus;
+  late bool hintStatus;
   int gallows = 0;
   int wordCount = 0;
   bool gameOver = false;
@@ -39,6 +43,15 @@ class _GameScreenState extends State<GameScreen> {
     });
   }
 
+  Widget createButton(index) {
+    return Center(
+      child: LetterButton(
+        buttonTitle: alphabetEng.alphabet[index].toUpperCase(),
+        onPress: () {},
+      ),
+    );
+  }
+
   void returnWelcomeScreen() {
     Navigator.pushAndRemoveUntil(
         context,
@@ -49,11 +62,13 @@ class _GameScreenState extends State<GameScreen> {
   void initWords() {
     gameOver = false;
     gameReset = false;
+    hintStatus = true;
     gallows = 0;
     buttonStatus = List.generate(26, (index) {
       return true;
     });
     wordList = [];
+    hintLetters = [];
     word = widget.hangmanObject.getWord()!;
     print('this is word' + word);
     if (word.length != 0) {
@@ -64,6 +79,7 @@ class _GameScreenState extends State<GameScreen> {
 
     for (int i = 0; i < word.length; i++) {
       wordList.add(word[i]);
+      hintLetters.add(i);
     }
   }
 
@@ -93,17 +109,49 @@ class _GameScreenState extends State<GameScreen> {
         gameOver = true;
         lives -= 1;
       }
-    });
-  }
-
-  Widget createButton(index) {
-    return Center(
-      child: LetterButton(
-        buttonTitle: alphabetEng.alphabet[index].toUpperCase(),
-        onPress: () {},
+      Alert(
+        context: context,
+        style: AlertStyle(
+          animationType: AnimationType.grow,
+          isCloseButton: false,
+          isOverlayTapDismiss: false,
+          animationDuration: Duration(milliseconds: 500),
+          backgroundColor: Colors.red,
+          alertBorder: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          titleStyle: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 30.0,
+            letterSpacing: 1.5,
+          ),
+        ),
+        title: 'You lose!',
+          buttons: [DialogButton(
+          color: Colors.green,
+        onPressed: () =>returnWelcomeScreen(),
+        child: Icon(
+          MdiIcons.home,
+          size: 30.0,
+        ),
       ),
+      DialogButton(
+      onPressed: () {
+        startGame();
+        Navigator.pop(context);
+      },
+      child: Icon(
+      MdiIcons.refresh,
+      size: 30.0,
+      ),
+      )
+      ]).show();
+    },
     );
   }
+
+
 
   @override
   Widget build(BuildContext context) {
