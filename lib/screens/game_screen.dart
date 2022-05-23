@@ -1,274 +1,94 @@
-import 'dart:ui';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:hangman/components/letterButton.dart';
-import 'package:hangman/screens/welcome_screen.dart';
-import 'package:hangman/utilities/alphabet.dart';
-import 'package:hangman/utilities/words.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
+import 'dart:async';
+
+class HangmanGame {
+  static const int hanged = 6;			// number of wrong guesses before the player's demise
+
+  final List<String> wordList;			// list of possible words to guess
+  final Set<String> lettersGuessed = <String>{};
+
+  late List<String> _wordToGuess = [];
+  late int _wrongGuesses = 0;
 
 
-class GameScreen extends StatefulWidget {
-  GameScreen({required this.hangmanObject});
 
-  final Words hangmanObject;
+  final StreamController<Null> _onWin = StreamController<Null>.broadcast();
+  Stream<Null> get onWin => _onWin.stream;
 
-  @override
-  _GameScreenState createState() => _GameScreenState();
-}
+  final StreamController<Null> _onLose = StreamController<Null>.broadcast();
+  Stream<Null> get onLose => _onLose.stream;
 
-class _GameScreenState extends State<GameScreen> {
-  int lives = 5;
-  Alphabet alphabetEng = Alphabet();
-  late String word;
-  late String hiddenWord;
-  List<String> wordList = [];
-  List<int> hintLetters = [];
-  late List<bool> buttonStatus;
-  late bool hintStatus;
-  int gallows = 0;
-  int wordCount = 0;
-  bool gameOver = false;
-  bool gameReset = false;
+  final StreamController<int> _onWrong = StreamController<int>.broadcast();
+  Stream<int> get onWrong => _onWrong.stream;
 
-  void startGame() {
-    setState(() {
-      widget.hangmanObject.resetGame();
-      alphabetEng = Alphabet();
-      lives = 5;
-      wordCount = 0;
-      gameOver = false;
-      gameReset = false;
-    });
+  final StreamController<String> _onRight = StreamController<String>.broadcast();
+  Stream<String> get onRight => _onRight.stream;
+
+  final StreamController<String> _onChange = StreamController<String>.broadcast();
+  Stream<String> get onChange => _onChange.stream;
+
+  HangmanGame(List<String> words) : wordList = List<String>.from(words);
+
+  void newGame() {
+    // shuffle the word list into a random order
+    wordList.shuffle();
+
+    // break the first word from the shuffled list into a list of letters
+    _wordToGuess = wordList.first.split('');
+
+    // reset the wrong guess count
+    _wrongGuesses = 0;
+
+    // clear the set of guessed letters
+    lettersGuessed.clear();
+
+    // declare the change (new word)
+    _onChange.add(wordForDisplay);
   }
 
-  Widget createButton(index) {
-    return Center(
-      child: LetterButton(
-        buttonTitle: alphabetEng.alphabet[index].toUpperCase(),
-        onPress: () {},
-      ),
-    );
-  }
+  void guessLetter(String letter) {
+    // store guessed letter
+    lettersGuessed.add(letter);
 
-  void returnWelcomeScreen() {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => WelcomeScreen()),
-        ModalRoute.withName('welcomeScreen'));
-  }
+    // if the guessed letter is present in the word, check for a win
+    // otherwise, check for player death
+    if (_wordToGuess.contains(letter)) {
+      _onRight.add(letter);
 
-  void initWords() {
-    gameOver = false;
-    gameReset = false;
-    hintStatus = true;
-    gallows = 0;
-    buttonStatus = List.generate(26, (index) {
-      return true;
-    });
-    wordList = [];
-    hintLetters = [];
-    word = widget.hangmanObject.getWord()!;
-    print('this is word' + word);
-    if (word.length != 0) {
-      hiddenWord = widget.hangmanObject.getHiddenWord(word.length);
-    } else {
-      returnWelcomeScreen();
-    }
-
-    for (int i = 0; i < word.length; i++) {
-      wordList.add(word[i]);
-      hintLetters.add(i);
-    }
-  }
-
-  void endGame(int index) {
-    if (lives == 0) {
-      returnWelcomeScreen();
-    }
-    if (gameOver) {
-      setState(() {
-        gameReset = true;
-      });
-      return;
-    }
-    bool check = false;
-    setState(() {
-      for (int i = 0; i < wordList.length; i++) {
-        if (wordList[i] == alphabetEng.alphabet[index]) {
-          check = true;
-          wordList[i] = '';
-          hiddenWord = hiddenWord.replaceFirst(RegExp('_'), word[i], i);
-        }
+      if (isWordComplete) {
+        _onChange.add(fullWord);
+        _onWin.add(null);
       }
-      if (!check) {
-        gallows += 1;
+      else {
+        _onChange.add(wordForDisplay);
       }
-      if (gallows == 6) {
-        gameOver = true;
-        lives -= 1;
+    }
+    else {
+      _wrongGuesses++;
+
+      _onWrong.add(_wrongGuesses);
+
+      if (_wrongGuesses == hanged) {
+        _onChange.add(fullWord);
+        _onLose.add(null);
       }
-      Alert(
-        context: context,
-        style: AlertStyle(
-          animationType: AnimationType.grow,
-          isCloseButton: false,
-          isOverlayTapDismiss: false,
-          animationDuration: Duration(milliseconds: 500),
-          backgroundColor: Colors.red,
-          alertBorder: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          titleStyle: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 30.0,
-            letterSpacing: 1.5,
-          ),
-        ),
-        title: 'You lose!',
-          buttons: [DialogButton(
-          color: Colors.green,
-        onPressed: () =>returnWelcomeScreen(),
-        child: Icon(
-          MdiIcons.home,
-          size: 30.0,
-        ),
-      ),
-      DialogButton(
-      onPressed: () {
-        startGame();
-        Navigator.pop(context);
-      },
-      child: Icon(
-      MdiIcons.refresh,
-      size: 30.0,
-      ),
-      )
-      ]).show();
-    },
-    );
+    }
   }
 
+  int get wrongGuesses => _wrongGuesses;
+  List<String> get wordToGuess => _wordToGuess;
+  String get fullWord => wordToGuess.join();
 
+  String get wordForDisplay => wordToGuess.map((String letter) =>
+  lettersGuessed.contains(letter) ? letter : "_").join();
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: Text('Hang Man'),
-      ),
-      body: Container(
-        color: Colors.blueGrey,
-        alignment: Alignment.bottomCenter,
-        child: Table(
-          textBaseline: TextBaseline.alphabetic,
-          children: [
-            TableRow(
-              children: [
-                TableCell(
-                  child: createButton(0),
-                ),
-                TableCell(
-                  child: createButton(1),
-                ),
-                TableCell(
-                  child: createButton(2),
-                ),
-                TableCell(
-                  child: createButton(3),
-                ),
-                TableCell(
-                  child: createButton(4),
-                ),
-                TableCell(
-                  child: createButton(5),
-                ),
-                TableCell(
-                  child: createButton(6),
-                ),
-              ],
-            ),
-            TableRow(
-              children: [
-                TableCell(
-                  child: createButton(7),
-                ),
-                TableCell(
-                  child: createButton(8),
-                ),
-                TableCell(
-                  child: createButton(9),
-                ),
-                TableCell(
-                  child: createButton(10),
-                ),
-                TableCell(
-                  child: createButton(11),
-                ),
-                TableCell(
-                  child: createButton(12),
-                ),
-                TableCell(
-                  child: createButton(13),
-                ),
-              ],
-            ),
-            TableRow(
-              children: [
-                TableCell(
-                  child: createButton(14),
-                ),
-                TableCell(
-                  child: createButton(15),
-                ),
-                TableCell(
-                  child: createButton(16),
-                ),
-                TableCell(
-                  child: createButton(17),
-                ),
-                TableCell(
-                  child: createButton(18),
-                ),
-                TableCell(
-                  child: createButton(19),
-                ),
-                TableCell(
-                  child: createButton(20),
-                ),
-              ],
-            ),
-            TableRow(
-              children: [
-                TableCell(
-                  child: createButton(21),
-                ),
-                TableCell(
-                  child: createButton(22),
-                ),
-                TableCell(
-                  child: createButton(23),
-                ),
-                TableCell(
-                  child: createButton(24),
-                ),
-                TableCell(
-                  child: createButton(25),
-                ),
-                TableCell(
-                  child: Text(''),
-                ),
-                TableCell(
-                  child: Text(''),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
+  // check to see if every letter in the word has been guessed
+  bool get isWordComplete {
+    for (String letter in _wordToGuess) {
+      if (!lettersGuessed.contains(letter)) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }
