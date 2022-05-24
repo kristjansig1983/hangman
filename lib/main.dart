@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hangman/screens/welcome_screen.dart';
+import 'package:hangman/screens/game_screen.dart';
+
 
 
 const List<String> wordList = const ["PLENTY","ACHIEVE","CLASS","STARE","AFFECT","THICK","CARRIER","BILL","SAY","ARGUE","OFTEN","GROW","VOTING","SHUT","PUSH","FANTASY","PLAN","LAST","ATTACK","COIN","ONE","STEM","SCAN","ENHANCE","PILL","OPPOSED","FLAG","RACE","SPEED","BIAS","HERSELF","DOUGH","RELEASE","SUBJECT","BRICK","SURVIVE","LEADING","STAKE","NERVE","INTENSE","SUSPECT","WHEN","LIE","PLUNGE","HOLD","TONGUE","ROLLING","STAY","RESPECT","SAFELY"];
@@ -14,12 +15,13 @@ class HangmanApp extends StatefulWidget {
 }
 
 class _HangmanAppState extends State<HangmanApp> {
-
+  late HangmanGame _engine;
 
   @override
   void initState() {
     super.initState();
 
+    _engine = HangmanGame(wordList);
   }
 
   @override
@@ -30,7 +32,7 @@ class _HangmanAppState extends State<HangmanApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: WelcomeScreen(),
+      home: HangmanPage(_engine),
     );
   }
 }
