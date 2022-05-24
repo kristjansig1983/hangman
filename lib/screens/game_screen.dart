@@ -3,14 +3,14 @@ import 'package:hangman/components/words.dart';
 
 class HangMan extends StatefulWidget {
   @override
-  _HangmanState createState() => _HangmanState
+  _HangManState createState() => _HangManState();
 }
 
-class _HangmanState extends State<HangMan> {
+class _HangManState extends State<HangMan> {
   late bool newGame;
   late bool gameOver;
-  int lives = 0;
-  int image = 0;
+  int livesLeft = 0;
+  int imageNum = 0;
   late Set<String> wrongLetters;
   late Set<String> rightLetters;
   String guessWord = '';
@@ -18,40 +18,41 @@ class _HangmanState extends State<HangMan> {
 
   @override
   void initState() {
-    startGame();
+    startNewGame();
     super.initState();
   }
 
-  void startGame() {
+  void startNewGame() {
     newGame = true;
-    gameOver = true;
+    gameOver = false;
     isWon = false;
-    lives = 5;
-    wrongLetters = Set();
-    rightLetters = Set();
+    livesLeft = 6;
+    imageNum = 0;
+    wrongLetters = new Set();
+    rightLetters = new Set();
     guessWord = randomWord().toUpperCase();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: createGameScreen(),
+      body: gameScreen(),
     );
   }
 
   Widget gameScreen() {
-    if(gameOver) {
+    if (gameOver) {
       return gameOverScreen();
     }
     if (newGame) {
-      return newGameScreen;
+      return welcomeScreen();
     }
     return Container(
-      color: Colors.red,
+      color: Colors.deepPurpleAccent,
       constraints: BoxConstraints.expand(),
       child: SingleChildScrollView(
         child: Column(
-          children: <Widget> [
+          children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(top: 50),
               child: Stack(
@@ -59,105 +60,102 @@ class _HangmanState extends State<HangMan> {
                 children: <Widget>[
                   Icon(
                     Icons.favorite,
-                    color: Colors.blue,
+                    color: Colors.red,
                     size: 80,
                   ),
                   Text(
-                    lives.toString(),
-                    style: TextStyle(
-                      fontSize: 25,
-                      color: Colors.white,
-                    ),
-                  ),
+                    livesLeft.toString(),
+                    style: TextStyle(fontSize: 25, color: Colors.white),
+                  )
                 ],
               ),
             ),
-            createImage(),
-            createGuessWord(),
-            createKeyboard(),
+            hangManImage(),
+            GuessWord(),
+            gameKeyboard()
           ],
         ),
       ),
     );
   }
 
-  Widget createImage() {
+  Widget hangManImage() {
     return Padding(
       padding: const EdgeInsets.only(top: 50, bottom: 20),
       child: Image.asset(
-        'images/$image.png',
-        height:  135.0,
+        'images/$imageNum.png',
+        height: 135,
       ),
     );
   }
 
-  String createFormattedWord() {
-    String formattedWord = '';
-    for(int i = 0; i < guessWord.length; i++) {
+  String formattedWord() {
+    String formattedWord = "";
+    for (int i = 0; i < guessWord.length; i++) {
       String letter = guessWord.substring(i, i + 1).toUpperCase();
-      if(rightLetters.contains(letter)) {
+      if (rightLetters.contains(letter)) {
         formattedWord += letter.toUpperCase();
       } else {
-        formattedWord += '_';
-      } if(i < guessWord.length - 1) {
-        formattedWord += ' ';
+        formattedWord += "_";
+      }
+      if (i < guessWord.length - 1) {
+        formattedWord += " ";
       }
     }
     return formattedWord;
   }
 
-  Widget createGuessWord() {
+  Widget GuessWord() {
     return Padding(
       padding: const EdgeInsets.only(top: 20, bottom: 10),
       child: Text(
-        createFormattedWord(),
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 50,
-        ),
+        formattedWord(),
+        style: TextStyle(color: Colors.white, fontSize: 50),
       ),
     );
   }
 
   void updateGame(String guessLetter) {
     guessLetter = guessLetter.toUpperCase();
-    if(guessWord.contains(guessLetter)) {
+    if (guessWord.contains(guessLetter)) {
       rightLetters.add(guessLetter);
       isWon = true;
-      for(int i = 0; i < guessWord.length; i++) {
-        if(!rightLetters.contains(guessLetter.substring(i, i + 1))) {
+      for (int i = 0; i < guessWord.length; i++) {
+        if (!rightLetters.contains(guessWord.substring(i, i + 1))) {
           isWon = false;
           break;
         }
       }
-      if(isWon) {
-        newGame = true;
+      if(isWon){
+        gameOver = true;
       }
     } else {
       wrongLetters.add(guessLetter);
-      lives -= 1;
-      image += 1;
-      if(lives <=0) {
-        lives = 0;
-        image = 6;
+      livesLeft -= 1;
+      imageNum += 1;
+      if (livesLeft <= 0) {
+        livesLeft = 0;
+        imageNum = 6;
         gameOver = true;
         isWon = false;
       }
     }
+    // Will now update UI
     setState(() {});
   }
+
   Widget gameOverScreen() {
-    String text = '';
-    if(isWon) {
-      text = 'Winner!';
+    String text = "";
+    if (isWon) {
+      text = "You Won!";
     } else {
-      text = 'Loser!';
+      text = "You Lost";
     }
     return Container(
-      color: Colors.red,
+      color: Colors.deepPurpleAccent,
       constraints: BoxConstraints.expand(),
       child: Column(
-        children: <Widget> [
+        children: <Widget>[
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
             child: Text(
@@ -165,29 +163,24 @@ class _HangmanState extends State<HangMan> {
               style: TextStyle(color: Colors.white, fontSize: 45),
             ),
           ),
+          Image.asset('assets/images/gallow.png'),
           Container(
             width: 250,
             height: 60,
-            child: ElevatedButton(
+            child: RaisedButton(
               onPressed: () {
-                startGame();
+                startNewGame();
                 newGame = false;
                 setState(() {});
               },
               child: Text(
-                'New Game',
-                style: TextStyle(
-                  fontSize: 25,
-                  fontFamily: 'Smokum',
-                  color: Colors.white,
-
-                ),
+                "Play Again",
+                style: TextStyle(fontSize: 25),
               ),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.blue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
+              color: Colors.blue,
+              textColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
             ),
           ),
@@ -199,32 +192,78 @@ class _HangmanState extends State<HangMan> {
   MaterialColor buttonColor(String guessLetter) {
     if (rightLetters.contains(guessLetter)) {
       return Colors.blueGrey;
-    } else if(wrongLetters.contains(guessLetter)) {
+    } else if (wrongLetters.contains(guessLetter)) {
       return Colors.red;
     } else {
       return Colors.blue;
     }
   }
-  //Needs more work
-  Widget createKeyboard() {
-    String alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+  Widget gameKeyboard() {
+    String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     return GridView.count(
-      crossAxisCount: 7,
-    shrinkWrap: true,
-    children: List.generate(
-        alphabet.length,
-            (index) => Container(
+        crossAxisCount: 7,
+        shrinkWrap: true,
+        children: List.generate(
+            alphabet.length,
+                (index) => Container(
               padding: EdgeInsets.all(5),
-              child: ElevatedButton(
+              child: RaisedButton(
+                color: buttonColor(alphabet.substring(index, index + 1)),
+                onPressed: () {
+                  String guessLetter = alphabet.substring(index, index + 1);
+                  if (!(rightLetters.contains(guessLetter) ||
+                      wrongLetters.contains(guessLetter))) {
+                    updateGame(guessLetter);
+                  }
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: Text(
-                  alphabet.substring(index, index +1),
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Smokum',
-                    fontSize: 20
-                  ),
+                  alphabet.substring(index, index + 1),
+                  style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
               ),
-            )),)
+            )));
+  }
+
+  Widget welcomeScreen() {
+    return Container(
+      color: Colors.deepPurpleAccent,
+      constraints: BoxConstraints.expand(),
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+            child: Text(
+              "HANGMAN",
+              style: TextStyle(color: Colors.white, fontSize: 45),
+            ),
+          ),
+          Image.asset('assets/images/gallow.png'),
+          Container(
+            width: 150,
+            height: 50,
+            child: RaisedButton(
+              onPressed: () {
+                setState(() {
+                  newGame = false;
+                });
+              },
+              child: Text(
+                "Start",
+                style: TextStyle(fontSize: 25),
+              ),
+              color: Colors.blue,
+              textColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
