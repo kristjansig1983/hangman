@@ -10,7 +10,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Hangman',
+      theme: ThemeData.dark().copyWith(
+        primaryColor: Color(0xFF2E3064),
+        scaffoldBackgroundColor: Color(0xFF2E3064),
+      ),
       home: HangMan(),
     );
   }
