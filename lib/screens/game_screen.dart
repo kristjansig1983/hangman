@@ -171,6 +171,7 @@ class _HangManState extends State<HangMan> {
               ),
             ),
           ),
+          Image.asset('images/Gallows.jpg'),
           SizedBox(
             width: 250,
             height: 60,
@@ -259,6 +260,7 @@ class _HangManState extends State<HangMan> {
               fontFamily: 'Smokum',),
             ),
           ),
+          Image.asset('images/Gallows.jpg'),
           SizedBox(
             width: 150,
             height: 50,
